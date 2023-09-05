@@ -1,3 +1,3 @@
 # Leet-code
 
-Nothing special
+Solutions for Leet Code problems

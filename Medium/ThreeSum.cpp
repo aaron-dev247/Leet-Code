@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -9,55 +10,47 @@ public:
     vector<vector<int>> threeSum(vector<int> &nums)
     {
         vector<vector<int>> triplets;
-        // have three pointers start at [0] [1] [2]
-        int i = 0, j = 1, k = 2, n = nums.size();
-        do
+
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+
+        for (int i = 0; i < n - 2; i++)
         {
-            // find all three combinations and add to vector if sum == 0
-            if (nums[i] + nums[j] + nums[k] == 0)
-            {
-                // sort the numbers
-                int smallest = min(nums[i], min(nums[j], nums[k]));
-                int largest = max(nums[i], max(nums[j], nums[k]));
-                int middle = 0 - smallest - largest; // nums[i] + nums[j] + nums[k] - smallest - largest
+            // nums[left] + nums[right] can never add up to 0
+            if (nums[i] > 0)
+                break;
 
-                bool isExist = false;
-                for (int x = 0; x < triplets.size(); x++)
+            // skip repeating numbers
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+
+            int left = i + 1, right = n - 1;
+            while (left < right)
+            {
+                int sum = nums[i] + nums[left] + nums[right];
+                // need greater sum
+                if (sum < 0)
+                    left++;
+                
+                // need lesser sum
+                else if (sum > 0)
+                    right--;
+
+                // triplet found
+                else
                 {
-                    if (smallest == triplets[x][0] && middle == triplets[x][1] && largest == triplets[x][2])
-                    {
-                        // numbers already exist
-                        isExist = true;
-                        break;
-                    }
+                    vector<int> temp = {nums[i], nums[left], nums[right]};
+                    triplets.push_back(temp);
+
+                    // skip repeating numbers
+                    while (left < right && nums[left] == temp[1])
+                        left++;
+
+                    while (left < right && nums[right] == temp[2])
+                        right--;
                 }
-                if (!isExist)
-                {
-                    triplets.push_back({smallest, middle, largest});
-                }
             }
-
-            if (k < n - 1)
-            {
-                k++;
-                continue;
-            }
-
-            if (j < k - 1)
-            {
-                j++;
-                k = j + 1;
-                continue;
-            }
-
-            if (i < j - 1)
-            {
-                i++;
-                j = i + 1;
-                k = j + 1;
-                continue;
-            }
-        } while (i != n - 3);
+        }
 
         return triplets;
     }

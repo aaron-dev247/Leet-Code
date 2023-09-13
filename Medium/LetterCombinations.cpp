@@ -13,8 +13,6 @@ public:
         if (digits.size() == 0)
             return {};
 
-        vector<string> letters;
-
         unordered_map<char, vector<string>> umap = {
             {'2', {"a", "b", "c"}},
             {'3', {"d", "e", "f"}},
@@ -24,67 +22,40 @@ public:
             {'7', {"p", "q", "r", "s"}},
             {'8', {"t", "u", "v"}},
             {'9', {"w", "x", "y", "z"}}};
-        int first = 0, second = 0, third = 0, fourth = 0;
+        int letterShowUpTimes = 1, letterRepeatTimes = 1;
         int n = digits.size();
 
-        while (first < umap[digits[0]].size())
+        for (int i = 1; i < n; i++)
         {
-
-            string temp = umap[digits[0]][first];
-
-            if (n > 1)
-            {
-                temp += umap[digits[1]][second];
-            }
-
-            if (n > 2)
-            {
-                temp += umap[digits[2]][third];
-            }
-
-            if (n > 3)
-            {
-                temp += umap[digits[3]][fourth];
-            }
-
-            letters.push_back(temp);
-
-            // increment of first, second, third, fourth pointers
-            if (n > 3 && fourth < umap[digits[3]].size() - 1)
-            {
-                fourth++;
-                continue;
-            }
-            else
-            {
-                // reset forth pointer
-                fourth = 0;
-            }
-
-            if (n > 2 && third < umap[digits[2]].size() - 1)
-            {
-                third++;
-                continue;
-            }
-            else
-            {
-                // reset third pointer
-                third = 0;
-            }
-
-            if (n > 1 && second < umap[digits[1]].size() - 1)
-            {
-                second++;
-                continue;
-            }
-            else
-            {
-                // reset second pointer
-                second = 0;
-            }
-
-            first++;
+            // calculate how many times a letter will show up in the combinations
+            letterShowUpTimes *= umap[digits[i]].size();
         }
+
+        vector<string> letters(umap[digits[0]].size() * letterShowUpTimes, "");
+
+        for (int i = 0; i < n; i++)
+        {
+            // i indicate string vector at digits[i] in umap
+            int numberofLetters = umap[digits[i]].size();
+            int letterIndex = 0; // letterIndex indicate string in letters
+            for (int x = 0; x < letterRepeatTimes; x++)
+            {
+                for (int j = 0; j < numberofLetters; j++)
+                {
+                    string s = umap[digits[i]][j];
+                    // j indicate string in umap[digits[i]]'s vector
+                    for (int k = 0; k < letterShowUpTimes; k++, letterIndex++)
+                    {
+                        letters[letterIndex] += s;
+                    }
+                }
+            }
+
+            letterRepeatTimes *= umap[digits[i]].size();
+            if (i + 1 < n)
+                letterShowUpTimes /= umap[digits[i + 1]].size();
+        }
+
         return letters;
     }
 };

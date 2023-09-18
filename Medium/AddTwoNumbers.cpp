@@ -51,7 +51,7 @@ public:
     }
 };
 
-int main(int argc, char const *argv[])
+int main()
 {
     Solution *s = new Solution();
     ListNode *l1 = new ListNode(2);

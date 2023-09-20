@@ -1,5 +1,5 @@
 #include <vector>
-#include <algorithm>
+#include <queue>
 
 using namespace std;
 
@@ -10,6 +10,15 @@ struct ListNode
     ListNode() : val(0), next(nullptr) {}
     ListNode(int x) : val(x), next(nullptr) {}
     ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+struct CompareListNode
+{
+    bool operator()(ListNode *l1, ListNode *l2)
+        const
+    {
+        return l1->val > l2->val;
+    }
 };
 
 class Solution
@@ -23,59 +32,34 @@ public:
         if (n == 1)
             return lists[0];
 
-        ListNode *head, *tempNode;
-
-        vector<int> tempVec;
-        int i = 0;
-        while (i < n)
+        // node with smallest value node will be at the top
+        priority_queue<ListNode *, vector<ListNode *>, CompareListNode> pq;
+        for (int i = 0; i < n; i++)
         {
-            if (lists[i] == nullptr) // skip empty list node
-            {
-                i++;
-                continue;
-            }
-
-            head = lists[i];
-            tempNode = head;
-            while (tempNode->next != nullptr)
-            {
-                tempVec.push_back(tempNode->val);
-                tempNode = tempNode->next;
-            }
-            tempVec.push_back(tempNode->val);
-            i++;
-            break;
+            if (lists[i])
+                pq.push(lists[i]);
         }
 
-        while (i < n)
+        ListNode *head = nullptr, *tail = nullptr;
+
+        while (pq.size() > 0)
         {
-            if (lists[i] == nullptr) // skip empty list node
+            ListNode *top = pq.top();
+            pq.pop(); // pop the smallest value node
+            if (top->next != nullptr)
+                pq.push(top->next);
+            if (head == nullptr)
             {
-                i++;
-                continue;
+                head = top;
+                tail = top;
             }
-            ListNode *temp = lists[i];
-            tempNode->next = temp;
-            while (temp->next != nullptr)
+            else
             {
-                tempVec.push_back(temp->val);
-                temp = temp->next;
+                tail->next = top;
+                tail = tail->next;
             }
-            tempVec.push_back(temp->val);
-            tempNode = temp;
-            i++;
         }
 
-        if (tempVec.size() == 0)
-            return nullptr;
-        sort(tempVec.begin(), tempVec.end());
-
-        tempNode = head;
-        for (int num : tempVec)
-        {
-            tempNode->val = num;
-            tempNode = tempNode->next;
-        }
         return head;
     }
 };

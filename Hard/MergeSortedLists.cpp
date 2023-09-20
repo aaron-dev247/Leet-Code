@@ -1,4 +1,5 @@
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -16,83 +17,65 @@ class Solution
 public:
     ListNode *mergeKLists(vector<ListNode *> &lists)
     {
-        if (lists.size() == 0)
-            return {};
-        ListNode *head = {};
-        ListNode *temp;
+        int n = lists.size();
+        if (n == 0)
+            return nullptr;
+        if (n == 1)
+            return lists[0];
 
+        ListNode *head, *tempNode;
+
+        vector<int> tempVec;
         int i = 0;
-        while (i < lists.size())
+        while (i < n)
         {
-            if (lists[i] != nullptr)
-            {
-                head = lists[i];
-                temp = head;
-                i++;
-                break;
-            }
-            i++;
-        }
-
-        while (i < lists.size())
-        {
-            if (lists[i] == nullptr)
+            if (lists[i] == nullptr) // skip empty list node
             {
                 i++;
                 continue;
             }
 
-            temp = head;
-            ListNode *tempHead = lists[i];
-            ListNode *tempNode = tempHead;
-            ListNode *tempPrev = nullptr;
-
-            while (tempNode != nullptr && head->val > tempNode->val) // filter out all val less than head(val)
+            head = lists[i];
+            tempNode = head;
+            while (tempNode->next != nullptr)
             {
-                tempPrev = tempNode;
+                tempVec.push_back(tempNode->val);
                 tempNode = tempNode->next;
             }
+            tempVec.push_back(tempNode->val);
+            i++;
+            break;
+        }
 
-            if (tempPrev != nullptr) // link all lesser value nodes
+        while (i < n)
+        {
+            if (lists[i] == nullptr) // skip empty list node
             {
-                tempPrev->next = temp;
-                head = tempHead;
+                i++;
+                continue;
             }
-
-            while (tempNode != nullptr && temp != nullptr) // link all middle value nodes
+            ListNode *temp = lists[i];
+            tempNode->next = temp;
+            while (temp->next != nullptr)
             {
-                tempPrev = tempNode;
-
-                if (temp->val == tempNode->val)
-                {
-                    ListNode *newNode = new ListNode(tempNode->val, temp->next);
-                    temp->next = newNode;
-                    temp = newNode;
-                }
-                else if (temp->val < tempNode->val && temp->next != nullptr && temp->next->val >= tempNode->val)
-                {
-                    ListNode *newNode = new ListNode(tempNode->val, temp->next);
-                    temp->next = newNode;
-                    temp = temp->next;
-                }
-                else
-                {
-                    if (temp->next == nullptr)
-                        break;
-                    temp = temp->next;
-                    continue;
-                }
-
-                tempNode = tempNode->next;
+                tempVec.push_back(temp->val);
+                temp = temp->next;
             }
-
-            if (tempPrev != nullptr && tempPrev == tempNode)
-            {
-                temp->next = tempPrev;
-            }
+            tempVec.push_back(temp->val);
+            tempNode = temp;
             i++;
         }
 
+        if (tempVec.size() == 0)
+            return nullptr;
+        sort(tempVec.begin(), tempVec.end());
+
+        tempNode = head;
+        for (int num : tempVec)
+        {
+            tempNode->val = num;
+            tempNode = tempNode->next;
+        }
         return head;
     }
 };
@@ -108,7 +91,7 @@ int main()
     list2->next = new ListNode(2);
     list2->next->next = new ListNode(11);
     list2->next->next->next = new ListNode(12);
-    vector<ListNode *> lists = {{}};
+    vector<ListNode *> lists = {list1, list2};
     s->mergeKLists(lists);
     return 0;
 }

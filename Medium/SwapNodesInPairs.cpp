@@ -1,3 +1,6 @@
+#include <algorithm>
+
+using namespace std;
 
 struct ListNode
 {
@@ -16,16 +19,8 @@ public:
         ListNode *tempNode = head;
         while (tempNode != nullptr && tempNode->next != nullptr)
         {
-            int tempVal = tempNode->val;
-            int tempNextVal = tempNode->next->val;
-
             // swap values
-            tempVal += tempNextVal;
-            tempNextVal = tempVal - tempNextVal;
-            tempVal = tempVal - tempNextVal;
-
-            tempNode->val = tempVal;
-            tempNode->next->val = tempNextVal;
+            swap(tempNode->val, tempNode->next->val);
 
             tempNode = tempNode->next->next;
         }

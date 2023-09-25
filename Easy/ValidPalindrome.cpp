@@ -4,27 +4,26 @@ using namespace std;
 
 /**
  * Time Complexity: O(n)
- * Space Complexity: O(n)
+ * Space Complexity: O(1)
  */
 class Solution
 {
 public:
     bool isPalindrome(string s)
     {
-        string newStr;
-        for (char c : s)
-        {
-            if (isalnum(c))
-                newStr += tolower(c);
-        }
 
-        int n = newStr.length();
+        int n = s.length();
         int start = 0, end = n - 1;
 
         while (start < end)
         {
+            while (start < end && !isalnum(s[start]))
+                start++;
 
-            if (newStr[start] != newStr[end])
+            while (start < end && !isalnum(s[end]))
+                end--;
+
+            if (tolower(s[start]) != tolower(s[end]))
                 return false;
 
             start++;

@@ -7,25 +7,26 @@ struct ListNode
     ListNode(int x) : val(x), next(nullptr) {}
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
-
+/**
+ * Time Complexity: O(n)
+ * Space Complexity: O(1)
+ */
 class Solution
 {
 public:
     ListNode *reverseList(ListNode *head)
     {
-        if (head == nullptr)
-            return nullptr;
 
-        ListNode *temp = head;
-        ListNode *newHead = new ListNode(head->val);
+        ListNode *prev = nullptr, *cur = head;
 
-        while (temp->next != nullptr)
+        while (cur != nullptr)
         {
-            ListNode *node = new ListNode(temp->next->val, newHead);
-            newHead = node;
-            temp = temp->next;
+            ListNode *temp = cur->next;
+            cur->next = prev;
+            prev = cur;
+            cur = temp;
         }
 
-        return newHead;
+        return prev;
     }
 };

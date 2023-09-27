@@ -3,6 +3,10 @@
 
 using namespace std;
 
+/**
+ * Time Complexity: O(n)
+ * Space Complexity: O(1)
+ */
 class Solution
 {
 public:
@@ -12,7 +16,7 @@ public:
 
         // start from left most and right most indexes
         int left = 0, right = base;
-        while (base > 0)
+        while (left < right)
         {
             // move the left or right index based on which side is the smallest
             if (height[left] < height[right])

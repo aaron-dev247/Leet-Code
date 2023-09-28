@@ -8,6 +8,10 @@ struct ListNode
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
+/**
+ * Time Complexity: O(n)
+ * Space Complexity: O(1)
+ */
 class Solution
 {
 public:
@@ -15,38 +19,27 @@ public:
     {
         ListNode *mergeList = new ListNode();
         ListNode *temp = mergeList;
-        ListNode *temp1 = list1, *temp2 = list2;
 
-        while (temp1 != nullptr && temp2 != nullptr)
+        while (list1 && list2)
         {
-            if (temp1->val < temp2->val)
+            if (list1->val < list2->val)
             {
-                temp->next = new ListNode(temp1->val);
-                temp = temp->next;
-                temp1 = temp1->next;
+                temp->next = list1;
+                list1 = list1->next;
             }
             else
             {
-                temp->next = new ListNode(temp2->val);
-                temp = temp->next;
-                temp2 = temp2->next;
+                temp->next = list2;
+                list2 = list2->next;
             }
+            temp = temp->next;
         }
 
         // adding the remaining nodes
-        while (temp1 != nullptr)
-        {
-            temp->next = new ListNode(temp1->val);
-            temp = temp->next;
-            temp1 = temp1->next;
-        }
-
-        while (temp2 != nullptr)
-        {
-            temp->next = new ListNode(temp2->val);
-            temp = temp->next;
-            temp2 = temp2->next;
-        }
+        if (list1)
+            temp->next = list1;
+        else
+            temp->next = list2;
 
         return mergeList->next;
     }

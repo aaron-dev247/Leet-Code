@@ -10,22 +10,10 @@ class TreeNode:
 class Solution:
     def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
         
-        stackP = [p]
-        stackQ = [q]
-
-        while stackP and stackQ:
-            nodeP = stackP.pop()
-            nodeQ = stackQ.pop()
-            
-            if not nodeP and nodeQ or nodeP and not nodeQ:
-                return False
-            
-            if nodeP and nodeQ:
-                if nodeP.val != nodeQ.val:
-                    return False
-                stackP.append(nodeP.left)
-                stackP.append(nodeP.right)
-                stackQ.append(nodeQ.left)
-                stackQ.append(nodeQ.right)
-
-        return True
+        if not p and not q:
+            return True
+        
+        if not p or not q or p.val != q.val:
+            return False
+        
+        return (self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right))

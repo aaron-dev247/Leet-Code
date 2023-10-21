@@ -1,15 +1,14 @@
-class Solution:
-    def fib(self, n: int) -> int:
-        if n == 0:
-            return 0
-        memo = {}
+from functools import cache
 
-        def dp(n):
-            if n <= 2:
-                return 1
-            if n in memo:
-                return memo[n]
-            memo[n] = dp(n - 1) + dp(n - 2)
-            return memo[n]
+
+class Solution:
+    @cache
+    def fib(self, n: int) -> int:
+
+        if n < 2:
+            return n
         
-        return dp(n)
+        return self.fib(n - 1) + self.fib(n - 2)
+
+s = Solution()
+print(s.fib(50))

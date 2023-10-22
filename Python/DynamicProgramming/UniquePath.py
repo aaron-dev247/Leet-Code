@@ -1,20 +1,17 @@
 class Solution:
     def uniquePaths(self, m: int, n: int) -> int:
 
-        memo = {}
+        table = [[0 for i in range(n)] for j in range(m)]
+        table [0][0] = 1
 
-        def dfs(m, n):
-            if m == 1 and n == 1:
-                return 1
+        for i in range(m):
+            for j in range(n):
+                if i + 1 < m:
+                    table[i + 1][j] += table[i][j]
+                if j + 1 < n:
+                    table[i][j + 1] += table[i][j]
+        
+        return table[m - 1][n - 1]
 
-            if m == 0 or n == 0:
-                return 0
-            
-            key = (m, n)
-            if key in memo:
-                return memo[key]
-
-            memo[key] = dfs(m - 1, n) + dfs(m, n - 1)
-            return memo[key]
-
-        return dfs(m, n)
+s = Solution()
+s.uniquePaths(3, 7)
